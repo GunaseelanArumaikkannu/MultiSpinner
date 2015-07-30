@@ -11,13 +11,15 @@ import com.guna.libmultispinner.MultiSelectionSpinner;
 public class MainActivity extends AppCompatActivity {
 
     private MultiSelectionSpinner multiSelectionSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String[] array = { "one", "two", "three" };
+        String[] array = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
         multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
         multiSelectionSpinner.setItems(array);
+        multiSelectionSpinner.setSelection(new int[]{2, 6});
     }
 
     @Override
