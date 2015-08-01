@@ -214,7 +214,4 @@ public class MultiSelectionSpinner extends Spinner implements
         return sb.toString();
     }
 
-    public boolean[] getmSelection(){
-        return mSelection;
-    }
 }
