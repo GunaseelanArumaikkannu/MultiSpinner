@@ -4,22 +4,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.guna.libmultispinner.MultiSelectionSpinner;
 
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
 
-    private MultiSelectionSpinner multiSelectionSpinner;
+public class MainActivity extends AppCompatActivity implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         String[] array = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"};
-        multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
+        MultiSelectionSpinner multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.mySpinner);
         multiSelectionSpinner.setItems(array);
         multiSelectionSpinner.setSelection(new int[]{2, 6});
+        multiSelectionSpinner.setListener(this);
     }
 
     @Override
@@ -42,5 +44,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void selectedIndices(List<Integer> indices) {
+
+    }
+
+    @Override
+    public void selectedStrings(List<String> strings) {
+        Toast.makeText(this, strings.toString(), Toast.LENGTH_LONG).show();
     }
 }

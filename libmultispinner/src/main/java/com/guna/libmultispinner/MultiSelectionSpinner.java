@@ -15,6 +15,13 @@ import java.util.List;
 
 public class MultiSelectionSpinner extends Spinner implements
         OnMultiChoiceClickListener {
+
+    public interface OnMultipleItemsSelectedListener{
+        void selectedIndices(List<Integer> indices);
+        void selectedStrings(List<String> strings);
+    }
+    private OnMultipleItemsSelectedListener listener;
+
     String[] _items = null;
     boolean[] mSelection = null;
     boolean[] mSelectionAtStart = null;
@@ -38,6 +45,10 @@ public class MultiSelectionSpinner extends Spinner implements
         super.setAdapter(simple_adapter);
     }
 
+    public void setListener(OnMultipleItemsSelectedListener listener){
+        this.listener = listener;
+    }
+
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
         if (mSelection != null && which < mSelection.length) {
             mSelection[which] = isChecked;
@@ -52,12 +63,15 @@ public class MultiSelectionSpinner extends Spinner implements
     @Override
     public boolean performClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Please select!!!");
         builder.setMultiChoiceItems(_items, mSelection, this);
         _itemsAtStart = getSelectedItemsAsString();
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 System.arraycopy(mSelection, 0, mSelectionAtStart, 0, mSelection.length);
+                listener.selectedIndices(getSelectedIndices());
+                listener.selectedStrings(getSelectedStrings());
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -213,5 +227,4 @@ public class MultiSelectionSpinner extends Spinner implements
         }
         return sb.toString();
     }
-
 }
