@@ -10,7 +10,6 @@ import com.guna.libmultispinner.MultiSelectionSpinner;
 
 import java.util.List;
 
-
 public class MainActivity extends AppCompatActivity implements MultiSelectionSpinner.OnMultipleItemsSelectedListener {
 
     @Override
