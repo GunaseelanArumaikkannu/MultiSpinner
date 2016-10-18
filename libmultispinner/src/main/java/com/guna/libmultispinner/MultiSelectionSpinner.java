@@ -26,6 +26,7 @@ public class MultiSelectionSpinner extends Spinner implements
     boolean[] mSelection = null;
     boolean[] mSelectionAtStart = null;
     String _itemsAtStart = null;
+    String mTitle = "Please select!!!";
 
     ArrayAdapter<String> simple_adapter;
 
@@ -63,7 +64,7 @@ public class MultiSelectionSpinner extends Spinner implements
     @Override
     public boolean performClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Please select!!!");
+        builder.setTitle(mTitle);
         builder.setMultiChoiceItems(_items, mSelection, this);
         _itemsAtStart = getSelectedItemsAsString();
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
@@ -179,6 +180,14 @@ public class MultiSelectionSpinner extends Spinner implements
         }
         simple_adapter.clear();
         simple_adapter.add(buildSelectedItemString());
+    }
+
+    public void setTitle (String title) {
+        mTitle = title;
+    }
+
+    public String getTitle () {
+        return mTitle;
     }
 
     public List<String> getSelectedStrings() {
