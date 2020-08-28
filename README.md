@@ -2,6 +2,11 @@
 
 The multi spinner is a component used to select multiple items from Spinner popup. The source code explaination and screenshots are added [here](http://v4all123.blogspot.com/2013/09/spinner-with-multiple-selection-in.html).
 
+# Screenshot
+<img src="app/screenshots/home.png" height="400" alt="Screenshot"/> 
+
+<img src="app/screenshots/popup.png" height="400" alt="Screenshot"/> 
+
 #Thank You
 
 License
