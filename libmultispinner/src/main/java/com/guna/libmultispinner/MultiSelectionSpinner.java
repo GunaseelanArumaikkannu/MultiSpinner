@@ -1,25 +1,29 @@
 package com.guna.libmultispinner;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MultiSelectionSpinner extends Spinner implements
+public class MultiSelectionSpinner extends AppCompatSpinner implements
         OnMultiChoiceClickListener {
 
-    public interface OnMultipleItemsSelectedListener{
-        void selectedIndices(List<Integer> indices);
-        void selectedStrings(List<String> strings);
+    public interface OnMultipleItemsSelectedListener {
+        void selectedIndices(List<Integer> indices, MultiSelectionSpinner spinner);
+
+        void selectedStrings(List<String> strings, MultiSelectionSpinner spinner);
     }
+
     private OnMultipleItemsSelectedListener listener;
 
     String[] _items = null;
@@ -46,7 +50,7 @@ public class MultiSelectionSpinner extends Spinner implements
         super.setAdapter(simple_adapter);
     }
 
-    public void setListener(OnMultipleItemsSelectedListener listener){
+    public void setListener(OnMultipleItemsSelectedListener listener) {
         this.listener = listener;
     }
 
@@ -61,20 +65,30 @@ public class MultiSelectionSpinner extends Spinner implements
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean performClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(mTitle);
         builder.setMultiChoiceItems(_items, mSelection, this);
         _itemsAtStart = getSelectedItemsAsString();
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+
+        builder.setNeutralButton("Select All", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectAll();
+            }
+        });
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 System.arraycopy(mSelection, 0, mSelectionAtStart, 0, mSelection.length);
-                listener.selectedIndices(getSelectedIndices());
-                listener.selectedStrings(getSelectedStrings());
+                listener.selectedIndices(getSelectedIndices(), MultiSelectionSpinner.this);
+                listener.selectedStrings(getSelectedStrings(), MultiSelectionSpinner.this);
             }
         });
+
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -85,6 +99,12 @@ public class MultiSelectionSpinner extends Spinner implements
         });
         builder.show();
         return true;
+    }
+
+    private void selectAll() {
+        Arrays.fill(mSelection, true);
+        simple_adapter.clear();
+        simple_adapter.add(buildSelectedItemString());
     }
 
     @Override
@@ -105,9 +125,9 @@ public class MultiSelectionSpinner extends Spinner implements
     }
 
     public void setItems(List<String> items) {
-        _items = items.toArray(new String[items.size()]);
+        _items = items.toArray(new String[0]);
         mSelection = new boolean[_items.length];
-        mSelectionAtStart  = new boolean[_items.length];
+        mSelectionAtStart = new boolean[_items.length];
         simple_adapter.clear();
         simple_adapter.add(_items[0]);
         Arrays.fill(mSelection, false);
@@ -116,8 +136,8 @@ public class MultiSelectionSpinner extends Spinner implements
 
     public void setSelection(String[] selection) {
         for (int i = 0; i < mSelection.length; i++) {
-                mSelection[i] = false;
-                mSelectionAtStart[i] = false;
+            mSelection[i] = false;
+            mSelectionAtStart[i] = false;
         }
         for (String cell : selection) {
             for (int j = 0; j < _items.length; ++j) {
@@ -182,11 +202,11 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter.add(buildSelectedItemString());
     }
 
-    public void setTitle (String title) {
+    public void setTitle(String title) {
         mTitle = title;
     }
 
-    public String getTitle () {
+    public String getTitle() {
         return mTitle;
     }
 
